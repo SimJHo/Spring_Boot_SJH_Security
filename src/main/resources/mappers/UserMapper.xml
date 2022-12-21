@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper 경로지정 -->
+<mapper namespace="edu.global.ex.mapper.UserMapper">
+
+	<!-- VO객체와 데이터베이스 컬럼을 매핑 -->
+	<resultMap id="authMap" type="AuthVO">
+		<id property="username" column="username" /> <!-- id = key (result로 해도 상관없음) -->
+		<result property="authority" column="authority" />
+	</resultMap>
+
+	<resultMap id="userMap" type="UserVO">
+		<id property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="enabled" column="enabled" />
+		<collection property="authList" resultMap="authMap"></collection> <!-- 1:N, List 매핑 -->
+	</resultMap>   
+	
+ 	<select id="getUser" resultMap="userMap">
+		<![CDATA[
+			SELECT * FROM USERS , AUTHORITIES 
+      		WHERE USERS.USERNAME = AUTHORITIES.USERNAME AND USERS.USERNAME = #{username}
+		]]>
+	</select>
+	
+</mapper>
